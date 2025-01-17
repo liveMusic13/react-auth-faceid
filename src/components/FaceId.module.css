@@ -1,0 +1,16 @@
+.video {
+	position: absolute;
+	z-index: 3;
+	top: 0;
+	left: 0;
+	width: 300px;
+	height: 250px;
+}
+
+.active {
+	display: block;
+}
+
+.no_active {
+	display: none;
+}

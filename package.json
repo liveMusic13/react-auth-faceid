@@ -1,0 +1,42 @@
+{
+	"name": "react-auth-faceid",
+	"version": "0.1.0",
+	"description": "A library for face recognition authentication",
+	"main": "dist/react-auth-faceid.umd.js",
+	"module": "dist/react-auth-faceid.es.js",
+	"types": "dist/index.d.ts",
+	"author": "Dmitriy Kovalenko",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"preview": "vite preview"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/liveMusic13/react-auth-faceid.git"
+	},
+	"homepage": "https://github.com/liveMusic13/react-auth-faceid#readme",
+	"keywords": [
+		"react",
+		"faceid",
+		"authentication",
+		"face-recognition"
+	],
+	"dependencies": {
+		"face-api.js": "^0.22.2",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@types/node": "^22.10.7",
+		"@types/react": "^18.3.18",
+		"@types/react-dom": "^18.3.5",
+		"@vitejs/plugin-react": "^4.3.4",
+		"globals": "^15.14.0",
+		"typescript": "~5.6.2",
+		"typescript-eslint": "^8.18.2",
+		"vite": "^6.0.5"
+	}
+}
