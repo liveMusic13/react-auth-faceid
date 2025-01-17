@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# React-Auth-FaceId
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a library for authentication using Face ID in React applications.
 
-Currently, two official plugins are available:
+## How does it work?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
+First, a request is sent to retrieve a reference image. This image is used to identify the person in front of the camera by comparing them with the reference image. If a match is found, a second request is sent, which, for example, returns a token for authentication.
 
 ```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+import { FaceId } from 'react-auth-faceid';
+
+const App: FC = () => {
+	const handleSuccess = (token: string) => {
+		console.log({ 'Token received': token });
+	};
+
+	const handleError = (error: string) => {
+		console.error({ error });
+	};
+
+	return (
+		<FaceId
+			fetchReference={{
+				url: 'https://example.com/api/image',
+			}}
+			validateFace={{
+				url: 'https://example.com/api/validate',
+				body: '',
+				method: 'POST',
+				headers: {},
+			}}
+			onSuccess={handleSuccess}
+			onError={handleError}
+			timeFaceId={5000}
+			styleButton={{ color: 'red' }}
+			styleCanvas={{ display: 'none' }}
+			styleVideo={{ width: '300px' }}
+		/>
+	);
+};
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+The **onSuccess** and **onError** functions are used to handle successful and failed requests. The **timeFaceId** prop sets the time (in milliseconds) during which face recognition is active. The **fetchReference** request is used to obtain the reference image, while the **validateFace** request checks if the user matches the reference image.

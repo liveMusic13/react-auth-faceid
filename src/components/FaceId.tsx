@@ -4,9 +4,18 @@ import Button from './Button';
 
 import styles from './FaceId.module.css';
 
-interface FaceIdProps {
-	fetchReferenceUrl: string; // URL для получения референса
-	validateFaceUrl: string; // URL для валидации лица
+interface IRequest {
+	url: string;
+	method?: string;
+	headers?: {
+		[key: string]: string;
+	};
+	body?: string | FormData | Blob | ArrayBuffer | null;
+}
+
+interface IFaceIdProps {
+	fetchReference: IRequest;
+	validateFace: IRequest;
 	onSuccess: (token: string) => void; // Callback при успешной валидации
 	onError: (error: string) => void; // Callback при ошибке
 	styleButton?: CSSProperties;
@@ -15,9 +24,9 @@ interface FaceIdProps {
 	timeFaceId: number;
 }
 
-const FaceId: FC<FaceIdProps> = ({
-	fetchReferenceUrl,
-	validateFaceUrl,
+const FaceId: FC<IFaceIdProps> = ({
+	fetchReference,
+	validateFace,
 	onSuccess,
 	onError,
 	styleButton,
@@ -39,7 +48,8 @@ const FaceId: FC<FaceIdProps> = ({
 	useEffect(() => {
 		const loadModels = async () => {
 			try {
-				const MODEL_URL = '/models';
+				const MODEL_URL = '/node_modules/react-auth-faceid/dist/models';
+
 				await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
 				await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
 				await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
@@ -54,7 +64,16 @@ const FaceId: FC<FaceIdProps> = ({
 	// Получение эталонного изображения с сервера
 	const fetchReferenceImage = async () => {
 		try {
-			const response = await fetch(fetchReferenceUrl);
+			const options: any = {
+				method: fetchReference.method || 'GET',
+				headers: fetchReference.headers || {},
+			};
+			if (options.method !== 'GET' && options.method !== 'HEAD') {
+				options.body = fetchReference.body
+					? JSON.stringify(fetchReference.body)
+					: null;
+			}
+			const response = await fetch(fetchReference.url, options);
 			if (!response.ok) throw new Error('Failed to fetch reference image');
 			const blob = await response.blob();
 			const img = new Image();
@@ -79,10 +98,10 @@ const FaceId: FC<FaceIdProps> = ({
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true });
 			if (videoRef.current) videoRef.current.srcObject = stream;
 			setCameraOn(true);
-			// Таймер для завершения через 10 секунд
+			// Таймер для завершения через timeFaceId секунд
 			const timeout = window.setTimeout(() => {
 				stopVideo();
-				onError('Face not recognized within 10 seconds');
+				onError(`Face not recognized within ${timeFaceId} seconds`);
 			}, timeFaceId);
 			setRecognitionTimeout(timeout);
 		} catch (err) {
@@ -130,15 +149,10 @@ const FaceId: FC<FaceIdProps> = ({
 	// Отправка запроса для валидации
 	const sendValidationRequest = async () => {
 		try {
-			const response = await fetch(validateFaceUrl, {
-				method: 'POST',
-				// body: JSON.stringify({
-				// 	grant_type: 'password',
-				// 	username: 'test@test.ru',
-				// 	password: '123',
-				// }),
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: `grant_type=password&username=test@test.ru&password=123&scope=&client_id=&client_secret=`,
+			const response = await fetch(validateFace.url, {
+				method: validateFace.method || 'POST',
+				headers: validateFace.headers || {},
+				body: validateFace.body || null,
 			});
 			if (!response.ok) throw new Error('Validation failed');
 			const data = await response.json();

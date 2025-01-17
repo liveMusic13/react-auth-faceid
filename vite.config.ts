@@ -1,21 +1,3 @@
-// import react from '@vitejs/plugin-react';
-// import { defineConfig } from 'vite';
-
-// export default defineConfig({
-// 	plugins: [react()],
-// 	build: {
-// 		lib: {
-// 			entry: 'src/index.ts',
-// 			name: 'ReactAuthFaceId',
-// 			fileName: format => `react-auth-faceid.${format}.js`,
-// 		},
-// 	},
-// 	server: {
-// 		port: 5174,
-// 	},
-// 	publicDir: 'public', // <-- убедись, что это значение используется
-// });
-
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -30,6 +12,7 @@ export default defineConfig({
 			name: 'ReactAuthFaceId',
 			fileName: format => `react-auth-faceid.${format}.js`,
 		},
+		outDir: path.resolve(__dirname, 'dist'), // Указываем путь для папки dist
 		rollupOptions: {
 			external: ['react', 'react-dom'],
 			output: {
