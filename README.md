@@ -35,9 +35,12 @@ const App: FC = () => {
 			styleButton={{ color: 'red' }}
 			styleCanvas={{ display: 'none' }}
 			styleVideo={{ width: '300px' }}
+			modelsPath='/models'
 		/>
 	);
 };
 ```
+
+The **modelsPath** prop is used to specify the path to the models in your application. To make it work, you need to download all the models and add them to your project. You can [download them](https://github.com/liveMusic13/react-auth-faceid/tree/main/public/models) from the project's repository.
 
 The **onSuccess** and **onError** functions are used to handle successful and failed requests. The **timeFaceId** prop sets the time (in milliseconds) during which face recognition is active. The **fetchReference** request is used to obtain the reference image, while the **validateFace** request checks if the user matches the reference image.

@@ -1,6 +1,6 @@
 {
 	"name": "react-auth-faceid",
-	"version": "0.1.0",
+	"version": "0.1.4",
 	"description": "A library for face recognition authentication",
 	"main": "dist/react-auth-faceid.umd.js",
 	"module": "dist/react-auth-faceid.es.js",

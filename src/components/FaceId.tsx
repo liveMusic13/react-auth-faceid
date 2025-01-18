@@ -22,6 +22,7 @@ interface IFaceIdProps {
 	styleVideo?: CSSProperties;
 	styleCanvas?: CSSProperties;
 	timeFaceId: number;
+	modelsPath: string;
 }
 
 const FaceId: FC<IFaceIdProps> = ({
@@ -33,6 +34,7 @@ const FaceId: FC<IFaceIdProps> = ({
 	styleVideo,
 	styleCanvas,
 	timeFaceId,
+	modelsPath,
 }) => {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,7 +50,7 @@ const FaceId: FC<IFaceIdProps> = ({
 	useEffect(() => {
 		const loadModels = async () => {
 			try {
-				const MODEL_URL = '/node_modules/react-auth-faceid/dist/models';
+				const MODEL_URL = modelsPath;
 
 				await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
 				await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
